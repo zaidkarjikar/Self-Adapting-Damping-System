@@ -92,7 +92,35 @@ Phase 1 is considered complete when:
 2. The Noise Floow Amplitude (Anoise) is defined. This determines the threshold for the control algorithm: Signals > Anoise will be treated as shocks requiring damping.
 3. The resonant frequencies (f0) of the driver assembly are mapped and documented.
    
-### Phase II: Parametric Variation (Grinding Cycles)
+## 3.2. Phase II: Parametric Variation (Grinding Cycles)
+
+### 3.2.1. Phase Objectives
+1. __Process Mapping:__
+   Correlate specific operating parameters (Vc, Vf) with Vibration Amplitude (A) and Frequency (f).
+3. __Shock Characterization:__
+   Quantify the sudden force impacts by measuring their Peak Amplitude (Apeak) and Pulse Duration (d).
+5. __Thermal Impact:__
+   Determine how the Coolant Volume Flow (Vkss) influences the temperature rise in the driver, which affects MR fluid viscosity.
+
+### 3.2.2. Experimental Matrix (DoE)
+To cover the full operating range, a full factorial test matrix will be executed.
+
+__Variables:__
+1. Cutting Speed (Vc): Low vs High
+2. Feed Rate (Vf): Low vs High
+3. Coolant Flow (Vkss): Standard vs Reduced (to test thermal limits)
+
+__Test Run Definitions:__
+
+| Run ID | Cutting Speed (Vc) | Feed Rate(Vf) | Coolant (Vkss) | Purpose |
+|--------|--------------------|---------------|----------------|---------|
+|  P-01  | Low                | Low           | Standard       | Base reference. Minimal load, cleanest signal |
+|  P-02  | High               | Low           | Standard       | Frequency Check. Impact of high rotational speeds on vibration frequency |
+|  P-03  | Low                | High          | Standard       | Force Check: Impact of aggressive feed on Force Amplitude ($A$). |
+|  P-04  | High               | High          | Standard       | Max Load: Worst-case steady-state scenario. |
+|  P-05  | High               | High          | Reduced        | Thermal Stress: Provoke temperature rise to test sensor drift. |
+
+
 Execute the following sequence for each combination of variables defined in Section 3:
 1. __Setup:__ Install cylindrical roller and align with driver.
 2. __Process Start:__ Initiate grinding cycle at define Vc and Vf.
@@ -102,11 +130,11 @@ Execute the following sequence for each combination of variables defined in Sect
    * Temperature rise (delta T)
 4. __Shock Provocation:__ Specific monitoring for sudden force spikes (simulating mechanical shocks or face runout). Measure the exact duration (d) of these impulse events.
 
-### Phase III: Environmental Stress Testing
+## 3.3. Phase III: Environmental Stress Testing
 1. __Thermal Loading:__ Run extended cycles with reduced Cooland Volume Flow (Vkss) to generate maximum process heat.
 2. __Measurement:__ Record the correlation between local Temperature (T0) and vibration characteristics to determine thermal drift in the driver.
 
-### Phase IV: Wear Simulation
+## 3.4. Phase IV: Wear Simulation
 1. __Tool Change:__ Replace the dressed wheel with a pre-worn grinding wheel.
 2. __Repetition:__ Repeat Phase II to determine how tool wear alters the frequency signature (f) and amplitude (A) of the shocks.
 
