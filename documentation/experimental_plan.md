@@ -31,9 +31,19 @@ To ensure the damping system is robust, the experiments will follow a full facto
   Comparative tests between a newly dressed grinding wheel and a worn grinding wheel (defined by specific wear degree).
 
 # Procedure
-### Phase I: System Calibration & Baseline
+## Phase I: System Calibration & Baseline
+### Phase Objectives
+1. __Sensor Verification:__ Ensure all installed sensors (force, acceleration, acoustic emission, temperature) are functioning and correctly calibrated.
+2. __Thermal Equilibrium:__ Establish a steady thermal state for the machine before testing begins to account for thermal drift.
+3. __Noise Floor Determination:__ Quantify the inherent vibration Amplitude (A0) and Frequency (f0) of the rotating driver without process loads (air cutting).
+4. __Interference Check:__ Confirm that no "false positives" (phantom shocks) are detected by the force sensors during idle rotation.
+
+### Instrumentation Setup
+Before calibration, verify physical installation
+
 1. __Sensor Calibration:__ Zeroing of force and acceleration sensors.
 2. __Idle Measurement:__ Recording of "noise floor" data (vibration and acoustic emission) with the spindle running but no contact between wheel and workpiece.
+   
 ### Phase II: Parametric Variation (Grinding Cycles)
 Execute the following sequence for each combination of variables defined in Section 3:
 1. __Setup:__ Install cylindrical roller and align with driver.
