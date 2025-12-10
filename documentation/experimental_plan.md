@@ -90,7 +90,6 @@ Phase 1 is considered complete when:
    
 ## 3.2. Phase II: Parametric Variation (Grinding Cycles)
 
-### 3.2.1. Phase Objectives
 1. __Process Mapping:__
    Correlate specific operating parameters ($V_c$, $V_f$) with Vibration Amplitude ($A$) and Frequency ($f$).
 3. __Shock Characterization:__
@@ -108,29 +107,119 @@ __Variables:__
 
 __Test Run Definitions:__
 
-| Run ID | Cutting Speed $V_c$| Feed Rate $V_f$ | Coolant $V_{kss}$ | Purpose |
-|--------|--------------------|---------------|----------------|---------|
-|  P-01  | Low                | Low           | Standard       | Base reference. Minimal load, cleanest signal |
-|  P-02  | High               | Low           | Standard       | Frequency Check. Impact of high rotational speeds on vibration frequency |
-|  P-03  | Low                | High          | Standard       | Force Check: Impact of aggressive feed on Force Amplitude ($A$). |
-|  P-04  | High               | High          | Standard       | Max Load: Worst-case steady-state scenario. |
-|  P-05  | High               | High          | Reduced        | Thermal Stress: Provoke temperature rise to test sensor drift. |
+| Run ID | Cutting Speed $V_c$ | Feed Rate $V_f$ | Coolant $V_{kss}$ | Purpose                                                                  |
+|--------|---------------------|-----------------|-------------------|--------------------------------------------------------------------------|
+|  P-01  | Low                 | Low             | Standard          | Base reference. Minimal load, cleanest signal                            |
+|  P-02  | High                | Low             | Standard          | Frequency Check. Impact of high rotational speeds on vibration frequency |
+|  P-03  | Low                 | High            | Standard          | Force Check: Impact of aggressive feed on Force Amplitude ($A$).         |
+|  P-04  | High                | High            | Standard          | Max Load: Worst-case steady-state scenario.                              |
+|  P-05  | High                | High            | Reduced           | Thermal Stress: Provoke temperature rise to test sensor drift.           |
 
+### 3.2.3 Execution Procedure
+__Step 2.1: Workpiece Setup__
+1. Load a cylindrical roller into the clamping system.
+2. To ensure runout shocks are present for measurement, use rollers with known geometric deviations if available, or rely on the inherent process dynamics described in the problem statement.
 
-Execute the following sequence for each combination of variables defined in Section 3:
-1. __Setup:__ Install cylindrical roller and align with driver.
-2. __Process Start:__ Initiate grinding cycle at define Vc and Vf.
-3. __Data Acquisition:__ Continuous logging of:
-   * Vibration frequency spectra ($f$)
-   * Peak amplitudes ($A$)
-   * Temperature rise ($\Delta T$)
-4. __Shock Provocation:__ Specific monitoring for sudden force spikes (simulating mechanical shocks or face runout). Measure the exact duration (d) of these impulse events.
+__Step 2.2: Grinding Cycle Execution__
+1. Initiate grinding cycle according to the parameters in the Test Run table (P-01 to P-05).
+2. Log high frequency sampling on Force and Acceleration sensors to capture transient start-up shocks.
+
+__Step 2.3: Shock Capture__
+1. The system has to measure the duration ($d$) of sudden impacts.
+2. During the transition phase (when the wheel first touches the roller face), trigger a burst mode recording.
+3. Identify the time delta ($\Delta t$) from the initial force spike to signal stabilization. This value d determines how fast the MR fluid's magnetic field must react.
+
+__Step 2.4: Thermal Logging__
+1. For Run P-05, extend the cycle duration.
+2. Monitor the temperature (T) sensor near the grinding zone.
+3. Terminate if temperature sensor exceeds safety limits or stabilizes.
+
+### 3.2.4 Data Analysis
+From the raw data, the following metrics must be extracted for the control logic:
+1. __Trigger Threshold__ ($A_{thresh}$) - The vibration amplitude level that distinguishes normal grinding from a shock event.
+2. __Reaction Window__ ($t_{react}$) - Based on the shock duration, how much time does the control unit have to energize the electromagnets?
+3. __Damping Map__ - A lookup table correlating Cutting Speed $V_c$ to the dominant Vibration Frequency ($f$), allowing the controller to predict unwanted resonance.
+
+### 3.2.5 Success Criterion
+Phase 2 is complete when:
+1. A clear distinction between "steady vibration" and "shock impact" is visible in the data.
+2. The duration (d) of shocks is quantified.
+3. Data exists for both high-load and thermal-stress scenarios.
 
 ## 3.3. Phase III: Environmental Stress Testing
-1. __Thermal Loading:__ Run extended cycles with reduced Cooland Volume Flow (Vkss) to generate maximum process heat.
-2. __Measurement:__ Record the correlation between local Temperature (T0) and vibration characteristics to determine thermal drift in the driver.
+
+### 3.3.1. Phase Objectives
+1. __Thermal Characterization:__ Quantify how the driver assembly heats up over time ($t$) and how this temperature rise ($\Delta \vartheta$) affects the MR fluid's container and coil resistance.
+2. __Viscosity Drift Simulation:__ Since MR fluid viscosity $\eta$ drops as temperature rises, we must determine if the "passive" viscosity changes enough to require active compensation from the controller.
+3. __Sensor Resilience:__ Verify that the acceleration and force sensors do not drift or fail under high-heat and high-humidity (coolant mist) conditions .
+
+### 3.3.2 Setup Modifications
+1. Tooling: Use a standard (dressed) grinding wheel to keep vibration consistent.
+2. Instrumentation:
+   * Focus: High-priority monitoring of the Temperature Sensors near the grinding zone and on the driver housing.
+   * Environment: Ensure the coolant delivery system is fully active to simulate the "wet" environment that creates humidity and mist.
+
+### 3.3.3 Experimental Matrix (Stress Factors)
+This phase pushes the system to its environmental limits rather than its mechanical limits.
+
+| Run ID | Cycle Duration     | Coolant $V_{kss}$ | Grinding Load       | Purpose |
+|--------|--------------------|-------------------|---------------------|---------|
+|  E-01  | Extended (60 min)  | Standard          | Medium (Continuous) | Saturation Test: Find the max steady-state temperature ($\vartheta_{max}$) the driver reaches. |
+|  E-02  | Standard           | Reduced (50%)     | High                | Heat Spike: Provoke rapid heating to test sensor response speed. |
+|  E-03  | Standard           | Off (Dry Run)     | Low (Short Bursts)  | worst-Case Thermal: Simulate coolant failure scenario (optional safety test). |
+
+### 3.3.4 Execution Procedure
+__Step 4.1: The "Saturation" Run (Run E-01)__
+1. Run a continuous grinding operation (or simulated load) for 60 minutes.
+2. Plot Temperature ($\vartheta$) vs. Time ($t$).
+3. Identify the time constant ($\tau$)—how long does it take for the driver temperature to stabilize?
+4. If the driver reaches $60^\circ$C after 20 minutes, the MR fluid's base viscosity might drop significantly. The control unit needs to know this "warm-up curve."
+
+__Step 4.2: The "Coolant Stress" Run (Run E-02)__
+1. Reduce coolant flow to 50% while maintaining high grinding parameters.
+2. Monitor the Structure-borne Sound (AE) sensor.
+3. Hypothesis: Less coolant = more friction = more heat = potentially higher noise/vibration.
+4. Watch for signal drift in the force sensors. If the sensors are sensitive to temperature gradients (pyroelectric effect), false shocks might be recorded.
+
+### 3.3.5 Data Analysis
+
+The output of Phase 3 is used to calculate a Thermal Compensation Factor ($k_{\vartheta}$) for the control algorithm.
+1. As Temperature ($\vartheta$) $\uparrow$, Fluid Viscosity ($\eta$) $\downarrow$.
+2. The control unit must increase the Magnetic Field Current ($I$) to compensate for the thinner fluid .
+   $$I_{req} = I_{base} + k_{\vartheta} \cdot (\vartheta_{current} - \vartheta_{ref})$$
+
+This experiment provides the data to define $k_{\vartheta}$.
+
+### 3.3.6 Success Criterion
+
+Phase 3 is complete when:
+1. The maximum operating temperature ($\vartheta_{max}$) of the driver is established.
+2. The correlation between Driver Temperature and "Drift" in the sensor signals is mapped.
+3. We confirm whether the MR fluid will stay within its functional temperature range or if active cooling (or current compensation) is strictly necessary.
 
 ## 3.4. Phase IV: Wear Simulation
+
+### 3.3.1 Phase Objectives
+1. __Wear Characterization:__ Determine how the vibration amplitude ($A$) and frequency ($f$) change as the grinding wheel degrades.
+2. __Threshold Validation:__ Verify if the shock trigger threshold defined in Phase 2 remains valid for a worn tool, or if the control logic requires a dynamic threshold that adapts to tool age.
+3. __Frequency Shift Analysis:__ Identify if the worn wheel induces new resonant frequencies that overlap with the driver's eigenfrequencies ($f_0$).
+
+### 3.3.2 Setup Modifications
+1. __Tool Change:__ The standard grinding wheel used in Phase 2 is replaced with a worn grinding wheel.
+2. __Instrumentation:__ Maintain the exact sensor configuration from Phase 2 to ensure data comparability.
+
+### 3.3.3 Experimental Matrix
+To isolate the wear variable, we repeat the specific test runs from Phase 2 that represented the "Best Case" (Low Load) and "Worst Case" (High Load) scenarios.
+
+| Run ID | Ref ID | Cutting Speed $v_c$ | Feed Rate $v_f$ | Purpose |
+|--------|--------|---------------------|-----------------|---------|
+| W-01   | P-01   | Low                 | Low             | Baseline Drift: How much does the noise floor rise just becayse the wheel is worn? |
+| W-02   | P-02   | High                | High            | Max Stress: Does a worn wheel under high load generate vibration spikes ($A$) that look like false shocks? |
+
+
+
+
+
 1. __Tool Change:__ Replace the dressed wheel with a pre-worn grinding wheel.
 2. __Repetition:__ Repeat Phase II to determine how tool wear alters the frequency signature (f) and amplitude (A) of the shocks.
 
