@@ -88,7 +88,7 @@ Phase 1 is considered complete when:
 2. The Noise Floor Amplitude ($A_{noise}$) is defined. This determines the threshold for the control algorithm: Signals > $A_{noise}$ will be treated as shocks requiring damping.
 3. The resonant frequencies ($f_0$) of the driver assembly are mapped and documented.
    
-## 3.2. Phase II: Parametric Variation (Grinding Cycles)
+## 3.2. Phase II: Parametric Variation
 
 ### 3.2.1 Phase II Objectives
 1. Correlate specific operating parameters ($V_c$, $V_f$) with Vibration Amplitude ($A$) and Frequency ($f$).
