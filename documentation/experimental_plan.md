@@ -216,6 +216,41 @@ To isolate the wear variable, we repeat the specific test runs from Phase 2 that
 | W-01   | P-01   | Low                 | Low             | Baseline Drift: How much does the noise floor rise just becayse the wheel is worn? |
 | W-02   | P-02   | High                | High            | Max Stress: Does a worn wheel under high load generate vibration spikes ($A$) that look like false shocks? |
 
+### 3.3.4 Execution Procedure
+__Step 4.1: Wear Verification__
+1. Measure and document the diameter and surface condition of the worn wheel before starting.
+2. Correlate the vibration data to a specific physical state of the tool.
+
+__Step 4.2: Comparative Grinding__
+1. Execute runs W-01 and W-02 using the exact same workpiece geometry as Phase 2.
+2. Capture the Acceleration Amplitude
+   Hypothesis: The worn wheel will likely show a higher average amplitude $A_{worn}$ than the fresh wheel $A_{fresh}$.
+
+__Step 4.3: Shock Discrimination Test__
+1. While grinding with the worn wheel (high vibration baseline), verify if the sudden impact is still detectable.
+2. The signal-to-noise ratio will be worse. The shock might be hidden under the higher vibration noise of the worn wheel.
+3. Calculate the SNR for the shock event using the worn wheel data.
+
+### 3.3.5 Data Analysis
+The primary output for Phase 4 is to determine if a Static Threshold or Dynamic Threshold is needed for the control unit.
+__Scenario A (Static Threshold Works):__
+1. Shock Amplitude ($A_{shock}$) >>> Worn Wheel Noise ($A_{worn}$).
+2. Result: Simple logic - if Signal > X, trigger damping.
+
+__Scenario B (Dynamic Threshold Needed):__
+1. Worn Wheel Noise ($A_{worn}$) approaches or exceeds the original Phase 2 Threshold ($A_{thresh}$).
+2. The control unit must learn the new baseline ($A_{worn}$) and only trigger on spikes relative to that new baseline (Relative Triggering).
+
+### 3.3.6 Success Criterion
+Phase 3 is complete when:
+1. The vibration increase ($\Delta A$) attributable solely to tool wear is quantified.
+2. The frequency spectrum ($f$) of the worn wheel is mapped to check for resonance risks with the driver.
+3. A decision is made on whether the MR Damping Control Algorithm needs a "Tool Wear Compensation" factor.
+
+
+
+
+
 
 
 
