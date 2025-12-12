@@ -2,7 +2,7 @@
 To generate a proper data driven foundation of the dynamic behavior of the driver during the grinding process.
 Specifically,
 1. Amplitude ($A$) and Frequency ($f$) of continuous vibrations
-2. Amplitude ($A$) and Duration ($d) of sudden force impacts (shocks) acting on the roller.
+2. Amplitude ($A$) and Duration ($d$) of sudden force impacts (shocks) acting on the roller.
 3. Thermal loads and high frequency noise in the grinding zone.
 
 This data is prerequisite for developing the control algorithms for the self adapting damping system.
